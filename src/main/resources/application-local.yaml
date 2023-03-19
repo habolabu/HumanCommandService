@@ -1,0 +1,70 @@
+# application config
+server:
+  port: ${SERVER_PORT:8101}
+  servlet:
+    context-path: ${CONTEXT_PATH:/human/command/api}
+
+# spring config
+spring:
+  application:
+    name: ${APPLICATION_NAME:f5ff7413e3d531cf92da5f12505aa8ad309a7dc0e3fb6041d57734c5cc5c6c2a}
+
+  # hibernate config
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: ${HIBERNATE_DIALECT:org.hibernate.dialect.MySQLDialect}
+    hibernate:
+      naming:
+        physical-strategy: ${HIBERNATE_NAMING:org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl}
+
+  # datasource config
+  datasource:
+    driver-class-name: ${DATASOURCE_DRIVER_CLASS:com.mysql.cj.jdbc.Driver}
+    url: ${DATASOURCE_URL:jdbc:mysql://localhost:3306/HumanCommandService}
+    username: ${DATASOURCE_USERNAME:root}
+    password: ${DATASOURCE_PASSWORD:12345678}
+
+  # rabbitmq config
+  rabbitmq:
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    virtual-host: ${RABBITMQ_VIRTUAL_HOST:/}
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    ignoreDeclarationException: ${RABBITMQ_IGNORE_DECLARATION_EXCEPTION:true}
+    concurrentConsumers: ${RABBITMQ_CONCURRENT_CONSUMERS:3}
+    maxConcurrentConsumers: ${RABBITMQ_MAX_CONCURRENT_CONSUMERS:10}
+    receiveTimeout: ${RABBITMQ_RECEIVE_TIMEOUT:100000}
+
+# cloudinary
+cloudinary:
+  cloudName: ${CLOUDINARY_NAME:dzd9sonxs}
+  apiKey: ${CLOUDINARY_API_KEY:979314734532517}
+  apiSecret: ${CLOUDINARY_API_SECRET:DCGohkxvvu85jQcSiXp_thMzTsw}
+  secure: ${CLOUDINARY_SECURE:true}
+
+# keycloak
+keycloak:
+  realm: ${KEYCLOAK_REALM:Habolabu}
+  auth-server-url: ${KEYCLOAK_AUTH_SERVER_URL:https://keycloak-habolabu-nguyentrungkien01.cloud.okteto.net/auth/}
+  ssl-required: ${KEYCLOAK_SSL_REQUIRED:none}
+  resource: ${KEYCLOAK_RESOURCE:Habolabu}
+  bearer-only: ${KEYCLOAK_BEARER_ONLY:true}
+  cors: ${KEYCLOAK_CORS:true}
+  config:
+    username: ${KEYCLOAK_USERNAME:admin}
+    password: ${KEYCLOAK_PASSWORD:12345678}
+    clientId: ${KEYCLOAK_CLIENT_ID:habolabu-back-end-service}
+    clientSecret: ${KEYCLOAK_CLIENT_SECRET:kqS6Lp9XnL1jcSzrul07mvTU6mQQFWJr}
+
+
+
+logging:
+  level:
+    org:
+      keycloak:
+        admin:
+          client: TRACE
