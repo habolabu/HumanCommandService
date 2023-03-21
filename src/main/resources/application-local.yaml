@@ -58,7 +58,7 @@ keycloak:
     username: ${KEYCLOAK_USERNAME:admin}
     password: ${KEYCLOAK_PASSWORD:12345678}
     clientId: ${KEYCLOAK_CLIENT_ID:habolabu-back-end-service}
-    clientSecret: ${KEYCLOAK_CLIENT_SECRET:kqS6Lp9XnL1jcSzrul07mvTU6mQQFWJr}
+    clientSecret: ${KEYCLOAK_CLIENT_SECRET:Lo4PmPoTWYMT6BmzF1f2ir6dlkJ9RiTq}
 
 
 
