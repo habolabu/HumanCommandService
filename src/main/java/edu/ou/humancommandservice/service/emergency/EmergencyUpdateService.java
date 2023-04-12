@@ -57,10 +57,9 @@ public class EmergencyUpdateService extends BaseService<IBaseRequest, IBaseRespo
      */
     @Override
     protected IBaseResponse doExecute(IBaseRequest request) {
-        final Map<String, String> dataMap = SecurityUtils.getCurrentAccount(rabbitTemplate);
         final EmergencyEntity emergencyEntity = EmergencyEntityMapper.INSTANCE
                 .fromEmergencyUpdateRequest((EmergencyUpdateRequest) request);
-        emergencyEntity.setUserId(Integer.parseInt(dataMap.get("userId")));
+        emergencyEntity.setUserId(SecurityUtils.getCurrentAccount(rabbitTemplate).getUserId());
 
         if (!userCheckExistByIdRepository.execute(emergencyEntity.getUserId())) {
             throw new BusinessException(
