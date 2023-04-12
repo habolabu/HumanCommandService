@@ -63,10 +63,9 @@ public class AvatarAddService extends BaseService<IBaseRequest, IBaseResponse> {
      */
     @Override
     protected IBaseResponse doExecute(IBaseRequest request) {
-        final Map<String, String> dataMap = SecurityUtils.getCurrentAccount(rabbitTemplate);
         final AvatarEntity avatarEntity = AvatarEntityMapper.INSTANCE
                 .fromAvatarAddRequest((AvatarAddRequest) request);
-        avatarEntity.setUserId(Integer.parseInt(dataMap.get("userId")));
+        avatarEntity.setUserId(SecurityUtils.getCurrentAccount(rabbitTemplate).getUserId());
 
         if (!userCheckExistByIdRepository.execute(avatarEntity.getUserId())) {
             throw new BusinessException(

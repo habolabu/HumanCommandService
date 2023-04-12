@@ -2,7 +2,7 @@
 server:
   port: ${SERVER_PORT:8101}
   servlet:
-    context-path: ${CONTEXT_PATH:/human/command/api}
+    context-path: ${SERVER_CONTEXT_PATH:/human/command/api}
 
 # spring config
 spring:
@@ -59,12 +59,3 @@ keycloak:
     password: ${KEYCLOAK_PASSWORD:12345678}
     clientId: ${KEYCLOAK_CLIENT_ID:habolabu-back-end-service}
     clientSecret: ${KEYCLOAK_CLIENT_SECRET:Lo4PmPoTWYMT6BmzF1f2ir6dlkJ9RiTq}
-
-
-
-logging:
-  level:
-    org:
-      keycloak:
-        admin:
-          client: TRACE
