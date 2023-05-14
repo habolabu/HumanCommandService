@@ -4,15 +4,12 @@ import edu.ou.humancommandservice.data.pojo.request.keycloak.KeyCloakAddUserRequ
 import edu.ou.humancommandservice.data.pojo.request.keycloak.KeyCloakUpdateUserRequest;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.UserResource;
-import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
 import javax.ws.rs.core.Response;
-import java.util.Collections;
 import java.util.Optional;
 
 public class KeyCloakUtils {
-    private final static String DEFAULT_PASSWORD = "12345678";
 
     /**
      * Create user
@@ -34,11 +31,6 @@ public class KeyCloakUtils {
         userRepresentation.setUsername(keyCloakAddUserRequest.getUsername());
         userRepresentation.setEnabled(true);
         userRepresentation.setEmailVerified(true);
-        final CredentialRepresentation credential = new CredentialRepresentation();
-        credential.setType(CredentialRepresentation.PASSWORD);
-        credential.setValue(DEFAULT_PASSWORD);
-        credential.setTemporary(false);
-        userRepresentation.setCredentials(Collections.singletonList(credential));
 
         final Response response = keycloak.realm(realm).users().create(userRepresentation);
         if (response.getStatus() != 201) {
