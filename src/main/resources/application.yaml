@@ -26,6 +26,8 @@ spring:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
+    hikari:
+      maximum-pool-size: 100
 
   # rabbitmq config
   rabbitmq:
