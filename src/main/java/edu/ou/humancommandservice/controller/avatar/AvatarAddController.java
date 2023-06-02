@@ -31,13 +31,15 @@ public class AvatarAddController {
      */
     @PreAuthorize(SecurityPermission.ADD_NEW_AVATAR)
     @PostMapping(
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<HttpStatus> addNewAvatar(
+    public ResponseEntity<IBaseResponse> addNewAvatar(
             @Validated
             AvatarAddRequest avatarAddRequest
     ) {
-        avatarAddService.execute(avatarAddRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(
+                avatarAddService.execute(avatarAddRequest),
+                HttpStatus.OK);
     }
 }
