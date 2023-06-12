@@ -2,7 +2,6 @@ package edu.ou.humancommandservice.service.avatar;
 
 import edu.ou.coreservice.common.constant.Message;
 import edu.ou.coreservice.common.exception.BusinessException;
-import edu.ou.coreservice.common.util.SecurityUtils;
 import edu.ou.coreservice.common.validate.ValidValidation;
 import edu.ou.coreservice.data.pojo.request.base.IBaseRequest;
 import edu.ou.coreservice.data.pojo.response.base.IBaseResponse;
@@ -13,7 +12,6 @@ import edu.ou.coreservice.queue.human.internal.avatar.AvatarUpdateQueueI;
 import edu.ou.coreservice.repository.base.IBaseRepository;
 import edu.ou.coreservice.service.base.BaseService;
 import edu.ou.humancommandservice.common.constant.CodeStatus;
-import edu.ou.humancommandservice.common.mapper.AvatarEntityMapper;
 import edu.ou.humancommandservice.data.entity.AvatarEntity;
 import edu.ou.humancommandservice.data.pojo.request.avatar.AvatarUpdateRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,15 +19,13 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AvatarUpdateService extends BaseService<IBaseRequest, IBaseResponse> {
     private final IBaseRepository<AvatarEntity, Integer> avatarUpdateRepository;
-    private final IBaseRepository<Integer, Boolean> userCheckExistByIdRepository;
     private final IBaseRepository<Integer, Integer> avatarUnselectByUserIdRepository;
+    private final IBaseRepository<Integer, AvatarEntity> avatarFindByIdRepository;
     private final RabbitTemplate rabbitTemplate;
     private final ValidValidation validValidation;
 
@@ -59,19 +55,7 @@ public class AvatarUpdateService extends BaseService<IBaseRequest, IBaseResponse
      */
     @Override
     protected IBaseResponse doExecute(IBaseRequest request) {
-        final AvatarEntity avatarEntity = AvatarEntityMapper.INSTANCE
-                .fromAvatarUpdateRequest((AvatarUpdateRequest) request);
-        avatarEntity.setUserId(SecurityUtils.getCurrentAccount(rabbitTemplate).getUserId());
-
-        if (!userCheckExistByIdRepository.execute(avatarEntity.getUserId())) {
-            throw new BusinessException(
-                    CodeStatus.NOT_FOUND,
-                    Message.Error.NOT_FOUND,
-                    "user",
-                    "user identity",
-                    avatarEntity.getUserId()
-            );
-        }
+        final AvatarEntity avatarEntity = avatarFindByIdRepository.execute(((AvatarUpdateRequest) request).getId());
 
         avatarUnselectByUserIdRepository.execute(avatarEntity.getUserId());
         rabbitTemplate.convertSendAndReceive(
@@ -83,8 +67,6 @@ public class AvatarUpdateService extends BaseService<IBaseRequest, IBaseResponse
         avatarEntity.setSelected(true);
 
         final int avatarId = avatarUpdateRepository.execute(avatarEntity);
-        avatarEntity.setId(avatarId);
-
         rabbitTemplate.convertSendAndReceive(
                 AvatarUpdateQueueI.EXCHANGE,
                 AvatarUpdateQueueI.ROUTING_KEY,
